@@ -4,10 +4,11 @@ class MainPage extends React.Component {
     constructor(props){
         super(props);
         this.handleTextInput = this.handleTextInput.bind(this);
+        this.handleOnClick = this.handleOnClick.bind(this);
     }
 
     state = {
-        filterString: "Filter By First and Last Name",
+        filterString: "",
         employees: []
     }
 
@@ -15,6 +16,9 @@ class MainPage extends React.Component {
         fetch('https://randomuser.me/api/?results=100')
         .then(response => response.json())
         .then((data) => {
+            data.results.forEach(element => {
+                element.address = element.location.street.number + " " + element.location.street.name + ", " + element.location.city + ", " + element.location.state + ", " + element.location.postcode;
+            });
             this.setState({employees: data.results})
         });
     }
@@ -25,7 +29,7 @@ class MainPage extends React.Component {
                 <div className="row">
                     <div className="col">
                         <h1>Employee Directory</h1>
-                        <input type="text" value={this.state.filterString} onChange={this.handleTextInput}></input>
+                        <input type="text" placeholder="Filter by name" onChange={this.handleTextInput}></input>
                     </div>
                 </div>
                 <div className="row">
@@ -34,11 +38,11 @@ class MainPage extends React.Component {
                             <thead>
                                 <tr>
                                     <th scope="col"></th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Cell Number</th>
-                                    <th scope="col">Age</th>
+                                    <th fieldname="name.first" onClick={this.handleOnClick} scope="col">First</th>
+                                    <th fieldname="name.last" onClick={this.handleOnClick} scope="col">Last</th>
+                                    <th fieldname="address" onClick={this.handleOnClick}scope="col">Address</th>
+                                    <th fieldname="cell" onClick={this.handleOnClick} scope="col">Cell Number</th>
+                                    <th fieldname="dob.age" onClick={this.handleOnClick} scope="col">Age</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,7 +59,7 @@ class MainPage extends React.Component {
                                         <td><img src={employee.picture.thumbnail} alt="employee"/></td>
                                         <td>{employee.name.first}</td>
                                         <td>{employee.name.last}</td>
-                                        <td>{employee.location.street.number + " " + employee.location.street.name + ", " + employee.location.city + ", " + employee.location.state + ", " + employee.location.postcode}</td>
+                                        <td>{employee.address}</td>
                                         <td>{employee.cell}</td>
                                         <td>{employee.dob.age}</td>
                                     </tr>)
@@ -70,6 +74,21 @@ class MainPage extends React.Component {
 
     handleTextInput(event){
         this.setState({filterString: event.target.value});
+    }
+
+    handleOnClick(event) {
+        let fieldName = event.target.getAttribute('fieldname');
+        let properties = Array.isArray(fieldName) ? fieldName : fieldName.split(".")
+    
+        let tmp = [].concat(this.state.employees);
+        tmp = tmp.sort((a,b) => {
+            let aVal = properties.reduce((prev, curr) => prev && prev[curr], a);
+            let bVal = properties.reduce((prev, curr) => prev && prev[curr], b);
+            if(aVal < bVal) { return -1; }
+            if(aVal > bVal) { return 1; }
+            return 0;
+        });
+        this.setState({employees: tmp});
     }
 }
 
