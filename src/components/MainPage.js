@@ -7,7 +7,7 @@ class MainPage extends React.Component {
     }
 
     state = {
-        filterString: "",
+        filterString: "Filter By First and Last Name",
         employees: []
     }
 
@@ -25,7 +25,7 @@ class MainPage extends React.Component {
                 <div className="row">
                     <div className="col">
                         <h1>Employee Directory</h1>
-                        <input type="text" onChange={this.handleTextInput}></input>
+                        <input type="text" value={this.state.filterString} onChange={this.handleTextInput}></input>
                     </div>
                 </div>
                 <div className="row">
