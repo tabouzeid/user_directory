@@ -28,8 +28,8 @@ class MainPage extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col">
-                        <h1>Employee Directory</h1>
-                        <input type="text" placeholder="Filter by name" onChange={this.handleTextInput}></input>
+                        <h1 className="text-center m-5">Employee Directory</h1>
+                        <input className="form-control input-md m-3" type="text" placeholder="Filter by name" onChange={this.handleTextInput}></input>
                     </div>
                 </div>
                 <div className="row">
