@@ -45,7 +45,7 @@ class MainPage extends React.Component {
                                 {this.state.employees
                                 .filter((employee) => {
                                     if(this.state.filterString.length){
-                                        return employee.name.first.toLowerCase().includes(this.state.filterString) || employee.name.last.toLowerCase().includes(this.state.filterString);
+                                        return (employee.name.first.toLowerCase() + " " + employee.name.last.toLowerCase()).includes(this.state.filterString.toLowerCase());
                                     } else {
                                         return true;
                                     }
